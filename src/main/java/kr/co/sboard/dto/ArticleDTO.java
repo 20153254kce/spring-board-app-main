@@ -25,6 +25,10 @@ public class ArticleDTO {
     private String regip;
     private String wdate;
 
+    // 추가필드
+    private String nick;
+    private List<FileDTO> fileList;
+
     // 폼 업로드 파일 객체
     private MultipartFile file1;
     private MultipartFile file2;
@@ -32,7 +36,6 @@ public class ArticleDTO {
     public List<MultipartFile> getFiles(){
         return List.of(file1, file2);
     }
-
 
     public Article toEntity(){
         return Article.builder()
@@ -43,7 +46,6 @@ public class ArticleDTO {
                 .comment(comment)
                 .file(file)
                 .hit(hit)
-                .writer(writer)
                 .regip(regip)
                 .build();
     }
