@@ -24,7 +24,8 @@ class ArticleDAOTest {
 
     @Test
     void select() {
-        ArticleDTO articleDTO = dao.select(17);
+        ArticleDTO articleDTO = dao.select(2);
+
         log.info(articleDTO);
     }
 
@@ -34,8 +35,8 @@ class ArticleDAOTest {
         //log.info(total);
     }
 
-   /*  @Test
-   void selectAll() {
+    @Test
+    void selectAll() {
 
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
                 //.searchType("writer")
@@ -54,8 +55,8 @@ class ArticleDAOTest {
         for(ArticleDTO dto : dtoList){
             log.info(dto);
         }
-
-    }*/
+        */
+    }
 
     @Test
     void update() {
