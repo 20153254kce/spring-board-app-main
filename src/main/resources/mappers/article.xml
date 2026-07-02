@@ -4,6 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.sboard.dao.ArticleDAO">
 
+    <!-- resultMap은 Mybatis의 조회결과를 DTO와 컬럼을 맵핑하기 위한 태그설정 -->
     <resultMap id="articleMap" type="kr.co.sboard.dto.ArticleDTO">
         <id property="ano" column="ano"/>
         <result property="type" column="type"/>
@@ -17,7 +18,7 @@
         <result property="wdate" column="wdate"/>
         <result property="nick" column="nick"/>
 
-        <!-- List속성을 바인딩하는 Mybatis collection-->
+        <!-- List 속성을 바인딩하는 Mybatis collection -->
         <collection property="fileList" ofType="kr.co.sboard.dto.FileDTO">
             <id property="fno" column="fno"/>
             <result property="ano" column="ano"/>
@@ -26,32 +27,30 @@
             <result property="download" column="download"/>
             <result property="rdate" column="rdate"/>
         </collection>
-
     </resultMap>
 
-
-
-    <select id="select" resultMap="articleMap"> <!-- 조회결과를 articelMap으로함 -->
+    <select id="select" resultMap="articleMap"><!-- 조회결과를 articleMap으로 출력 -->
         SELECT
         a.*,
         u.nick,
-        f.* FROM article a
+        f.*
+        FROM article a
         JOIN user u ON a.writer = u.userid
         LEFT JOIN file f ON a.ano = f.ano
-        WHERE a.ano = #{ano};
+        WHERE a.ano=#{ano};
     </select>
 
     <sql id="searchWhere">
         <where>
             <if test="pageRequestDTO.searchType != null and pageRequestDTO.keyword != null">
                 <choose>
-                    <when test='pageRequestDTO.searchType == "title"'>
+                    <when test="pageRequestDTO.searchType == 'title'">
                         AND a.title LIKE CONCAT('%', #{pageRequestDTO.keyword}, '%')
                     </when>
-                    <when test='pageRequestDTO.searchType == "content"'>
+                    <when test="pageRequestDTO.searchType == 'content'">
                         AND a.content LIKE CONCAT('%', #{pageRequestDTO.keyword}, '%')
                     </when>
-                    <when test='pageRequestDTO.searchType == "writer"'>
+                    <when test="pageRequestDTO.searchType == 'writer'">
                         AND u.nick LIKE CONCAT('%', #{pageRequestDTO.keyword}, '%')
                     </when>
                 </choose>
@@ -76,7 +75,7 @@
         <include refid="searchWhere"/>
     </select>
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="ano">
         INSERT INTO article SET
         type='free',
         title=#{title},
@@ -88,6 +87,10 @@
     </insert>
 
     <update id="update">
+    </update>
+
+    <update id="updateHit">
+        UPDATE article SET hit = hit + 1 WHERE ano=#{ano};
     </update>
 
     <delete id="delete">
